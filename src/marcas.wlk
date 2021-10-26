@@ -1,42 +1,34 @@
-class Marcas { 
-	var property cantidadDeLupulo = 0
-	var property paisDeFabricacion = "Argentina"
-}
-  
-
-class Cervezas inherits Marcas{
-	var property graduacion = 0
-	var property marca = "none"
-	var property graduacionReglamentaria = 0
+class Marcas {
+	var property grsLupulo
+	var property paisFabricacion	
 }
 
-class Rubia inherits Cervezas {
+
+class Cervezas {
+	var property marca
+}
+
+class CervezaRubia inherits Cervezas{
+	var property graduacion
+}
+
+
+class CervezaNegra inherits Cervezas {
+	var property graduacionReglamentaria = 10
 	
+	method graduacion(){return graduacionReglamentaria.min(marca.grsLupulo() * 2)}
 }
 
-class Negra inherits Cervezas {
-	override method graduacion() {
-		return graduacionReglamentaria.min(self.cantidadDeLupulo() * 2)
-	}
+class CervezaRoja inherits CervezaNegra {
+	override method graduacion() { return super() * 1.25 }
 }
 
-class Roja inherits Cervezas {
-	override method graduacion() {
-		return graduacionReglamentaria.min(self.cantidadDeLupulo() * 2) * 1.25
-	}
-}
-
-class Jarra inherits Cervezas{
-	const contenido = []
+class Jarras inherits Cervezas{
 	var property capacidad
+	var property contenido
 	
-	override method marca() { return contenido.map({c=> c.marca()})} // creo que bien
-	
-	method agregarContenido(unaCerveza) { contenido.add(unaCerveza) }
-	
-	method contenidoDeLaJarra() { return contenido }
-	
-	method alcoholPorLitro() {
-		return  contenido.map({c=> c.graduacion() * capacidad})  // creo que bien
+	method contenidoDeAlcohol() {
+		return  contenido.graduacion() * capacidad 
 	}
+
 }

@@ -1,0 +1,67 @@
+import marcas.*
+
+describe "Test Marcas"{
+	
+	const corona = new Marcas(grsLupulo = 2 , paisFabricacion = "Belgica" )	
+	const guiness = new Marcas(grsLupulo = 6 , paisFabricacion = "Checoslovaquia" )	
+	const hofbrau = new Marcas(grsLupulo = 3 , paisFabricacion = "Alemania" )
+
+	const cervezaNegra = new CervezaNegra (marca = guiness)
+	const cervezaRubia = new CervezaRubia ( marca = corona , graduacion = 8)
+	const cervezaRoja = new CervezaRoja (marca = hofbrau)
+	
+	const jarra1 = new Jarras(capacidad = 1 , marca = guiness , contenido = cervezaNegra )
+	const jarra2 = new Jarras(capacidad = 2 , marca = corona , contenido = cervezaRubia )
+	const jarra3 = new Jarras(capacidad = 1 , marca = hofbrau , contenido = cervezaRoja )
+	
+	
+	test "Pais de Fabricación de la marca Corona"{
+		
+		assert.equals("Belgica", corona.paisFabricacion())
+	}
+	
+	test "Cantidad de gramos de lúpulo por litro que lleva la marca Corona"{
+		
+		assert.equals(2 , corona.grsLupulo())
+	}
+
+	test "Pais de Fabricación de la marca Guiness"{
+		
+		assert.equals("Checoslovaquia", guiness.paisFabricacion())
+	}
+	
+	test "Cantidad de gramos de lúpulo por litro que lleva la marca Guiness"{
+		
+		assert.equals(6 , guiness.grsLupulo())
+	}
+	
+	test "Pais de Fabricación de la marca Hofbräu"{
+		
+		assert.equals("Alemania", hofbrau.paisFabricacion())
+	}
+	
+	test "Cantidad de gramos de lúpulo por litro que lleva la marca Hofbräu"{
+		
+		assert.equals(3 , hofbrau.grsLupulo())
+	}
+	
+	test "Graduacion de la Cerveza Negra Marca Guiness"{
+		assert.equals(10, cervezaNegra.graduacion())
+	}
+
+	test "Contenido de alcohol de una Jarra de 1 lts de Cerveza Negra"{
+	
+		assert.equals(10 , jarra1.contenidoDeAlcohol())
+	}
+	
+	test "Contenido de alcohol de una Jarra de 0.5 lts de Cerveza Rubia"{
+	
+		assert.equals(16, jarra2.contenidoDeAlcohol())
+	}
+	
+	test "Contenido de alcohol de una Jarra de 1 lts de Cerveza Roja"{
+	
+		assert.equals(7.5 , jarra3.contenidoDeAlcohol())
+	}
+	
+}
