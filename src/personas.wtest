@@ -1,6 +1,122 @@
+import Personas.*
+import Marcas.*
+import Carpas.*
 
-test "testX" {
+describe "Test Personas"{
+	
+	//Marcas
+	const corona = new Marcas(grsLupulo = 2 , paisFabricacion = "Belgica" )
+	const guiness = new Marcas(grsLupulo = 6 , paisFabricacion = "Checoslovaquia" )
+	const hofbrau = new Marcas(grsLupulo = 3 , paisFabricacion = "Alemania" )
+	
+	const cervezaNegra = new CervezaNegra (marca = guiness)
+	const cervezaRubia = new CervezaRubia ( marca = corona , graduacion = 0)
+	const cervezaRoja = new CervezaRoja (marca = hofbrau)
+	
+	const jarra1 = new Jarras(capacidad = 1 , marca = guiness , contenido = cervezaNegra )
+	const jarra2 = new Jarras(capacidad = 0.5 , marca = corona , contenido = cervezaRubia )
+	const jarra3 = new Jarras(capacidad = 1 , marca = hofbrau , contenido = cervezaRoja )
+	
+	const persona1 = new Belgas(peso = 80 , jarrasCompradas = [jarra3], leGustaLaMusica = false, nivelDeAguante = 15 ,nacionalidad = "Belgica" )
+	const persona2 = new Alemanes(peso = 70 , jarrasCompradas = [jarra1], leGustaLaMusica = true, nivelDeAguante = 5 ,nacionalidad = "Alemania" )
+	const persona3 = new Checos(peso = 50 , jarrasCompradas = [jarra2], leGustaLaMusica = true, nivelDeAguante = 50 ,nacionalidad = "Checoslovaquia" )
+	const persona4 = new Checos(peso = 40 , jarrasCompradas = [jarra1], leGustaLaMusica = true, nivelDeAguante = 50 ,nacionalidad = "Checoslovaquia" )
+	
+	
+	const carpa1 = new Carpas(limitePersonas = 2 , bandaMusical = true, marcaQueVende = guiness)
+	const carpa2 = new Carpas(limitePersonas = 1 , bandaMusical = false, marcaQueVende = guiness)
+	
+	
+	method initialize(){
+		persona1.marcaQueleGusta(cervezaNegra)
+		persona2.marcaQueleGusta(cervezaNegra)
+		persona2.marcaQueleGusta(cervezaRubia)
+		persona2.marcaQueleGusta(cervezaRoja)
+		persona3.marcaQueleGusta(cervezaNegra)
+		persona2.comprarJarra(jarra2)
+	}
+	
+	test"A Persona1 le gusta la marca de cerveza Guiness"{
+		assert.equals(guiness , persona1.marcaQueleGusta(cervezaNegra))
+	}
+	
+	test"A Persona1 no le gusta la marca de cerveza Corona"{
+		assert.equals(null ,persona1.marcaQueleGusta(cervezaRubia))
+	}
 
-	assert.that(true)
+	test"A Persona1 no le gusta la marca de cerveza Hofbräu"{
+		assert.equals(null , persona1.marcaQueleGusta(cervezaRoja))
+	}
+		
+	test"Persona1 está ebria"{
+		assert.that(persona1.estaEbria())
+	}
+	
+	test"Persona1 cantidad de alcohol que ingirió"{
+		assert.equals(7.5, persona1.totalDeAlcoholIngerido())
+	}
+	
+	test"A Persona2 le gusta la marca de cerveza Guiness"{
+		assert.equals(guiness , persona2.marcaQueleGusta(cervezaNegra))
+	}
+	
+	test"A Persona2 le gusta la marca de cerveza Corona"{
+		assert.equals(corona , persona2.marcaQueleGusta(cervezaRubia))
+	}
 
+	test"A Persona2 le gusta la marca de cerveza Hofbräu"{
+		assert.equals(hofbrau , persona2.marcaQueleGusta(cervezaRoja))
+	}
+		
+	test"Persona2 está ebria"{
+		assert.that(persona2.estaEbria())
+	}
+	
+	test"Persona2 cantidad de alcohol que ingirió"{
+		assert.equals(10 , persona2.totalDeAlcoholIngerido())
+	}
+
+	test"A Persona3 le gusta la marca de cerveza Guiness"{
+		assert.equals(guiness , persona3.marcaQueleGusta(cervezaNegra))
+	}
+	
+	test"A Persona3 no le gusta la marca de cerveza Corona"{
+		assert.equals(null , persona3.marcaQueleGusta(cervezaRubia))
+	}
+
+	test"A Persona3 no le gusta la marca de cerveza Hofbräu"{
+		assert.equals(null , persona3.marcaQueleGusta(cervezaRoja))
+	}
+		
+	test"Persona3 no está ebria"{			
+		assert.notThat(persona3.estaEbria())
+	}
+	
+	test"Persona3 cantidad de alcohol que ingirió"{
+		assert.equals(0 , persona3.totalDeAlcoholIngerido())
+	}
+	
+	test"Persona3 quiere entrar a la carpa1"{
+		assert.that(persona3.quiereEntrarACarpa(carpa1))
+	}
+	
+	test"Persona1 no quiere entrar a la carpa1"{
+		assert.notThat(persona1.quiereEntrarACarpa(carpa1))
+	}
+	
+	test"Persona3 puede entrar en carpa1"{
+		assert.that(persona3.puedeEntrarACarpa(carpa1))
+	}
+		
+	test"Persona1 entra en carpa2 pero no puede"{
+		assert.equals("No puede ingresar a la carpa", persona1.entrarACarpa(carpa2))
+	}
+	
+	test"Persona2 no es patriota"{
+		assert.notThat(persona2.esPatriota())
+	}
+	
+	test"Persona4 es patriota"{
+		assert.that(persona4.esPatriota())
+	}
 }

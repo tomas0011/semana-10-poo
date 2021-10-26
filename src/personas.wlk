@@ -2,64 +2,75 @@ import marcas.*
 import carpas.*
 
 class Personas {
-	var property peso = 0
-	var property leGustaEscucharMusica = true
-	var property nivelDeAguante = 0
+	var property peso
+	const jarrasCompradas = []
+	var property leGustaLaMusica
+	var property nivelDeAguante
+	var property leGustaLaMarca = []
 	var property nacionalidad
-	var property jarrasCompradas = [ ]
 	
-	method comprarJarra(unaJarra) {
-		jarrasCompradas.add(unaJarra)
-	}
+	method comprarJarra(unaJarra){jarrasCompradas.add(unaJarra)}
 	
-	method cantidadDeLitrosIngeridos() {
-		return jarrasCompradas.sum({j=> j.capacidad()})
-	}
+	method jarrasCompradas(){return jarrasCompradas}
 	
-	method estaEbria() {
-		return (self.totalDeAlcohol() * peso) > nivelDeAguante
-	}
+	method estaEbria(){	return jarrasCompradas.sum({ j => j.capacidad() }) * peso > nivelDeAguante	}
+
+	method marcaQueleGusta(unaCerveza)
 	
-	method totalDeAlcohol() {
-		return jarrasCompradas.sum({j=> j.alcoholPorLitro()})
-	}
-	
-	method leGustaMarca(cerveza) 
+	method totalDeAlcoholIngerido() { return jarrasCompradas.sum({ j=> j.capacidad() * j.contenidoDeAlcohol() }) }
+		
+	method cantidadDeLitrosIngeridos() {return jarrasCompradas.sum({j=> j.capacidad()})	}
 	
 	method quiereEntrarACarpa(unaCarpa) {
-		return self.leGustaMarca(unaCarpa.marcaQueVende() and (self.leGustaEscucharMusica() and unaCarpa.banda()))
+		return self.leGustaLaMarca() == unaCarpa.marcaQueVende() and self.leGustaLaMusica() and unaCarpa.bandaMusical()
 	}
 	
-	method puedeEntrarACarpa(unaCarpa, unaPersona) { 
-		return self.quiereEntrarACarpa(unaCarpa) and unaCarpa.dejaIngresar(unaPersona)
-	} // revisar
-	
-	method entrarACarpa(unaCarpa, unaPersona) {	
-		return if (self.puedeEntrarACarpa(unaCarpa, unaPersona)){ true } else { "Error" }
+	method puedeEntrarACarpa(unaCarpa) { 
+		return self.quiereEntrarACarpa(unaCarpa) and unaCarpa.dejaIngresar(self)
 	}
 	
-	method esPatriota(unaPersona) {
-		return unaPersona.jarrasCompradas().all({j=> j.paisDeFabricacion() == unaPersona.nacionalidad() })
+	method entrarACarpa(unaCarpa) {
+		if (self.puedeEntrarACarpa(unaCarpa)){
+			unaCarpa.cantidadDePersonasEnCarpa().add(self)
+			return true
+		} else { 
+			return "No puede ingresar a la carpa"
+		}
 	}
 	
+	method esPatriota() {
+		return self.jarrasCompradas().all({j=> j.contenido().marca().paisFabricacion() == self.nacionalidad() })
+	}
 }
 
 class Belgas inherits Personas{
-	override method leGustaMarca(unaCerveza) {
-		return unaCerveza.cantidadDeLupulo() > 4
-	}
+	override method marcaQueleGusta(unaCerveza) {
+		if (unaCerveza.marca().grsLupulo() > 4) {
+			leGustaLaMarca = unaCerveza.marca()
+		} else {
+			leGustaLaMarca = null
+		}
+		return leGustaLaMarca
+	}	
 }
 
 class Checos inherits Personas {
-	override method leGustaMarca(unaCerveza) {
-		return unaCerveza.graduacion() > 8
+	override method marcaQueleGusta(unaCerveza) {
+		if (unaCerveza.graduacion() > 8) {
+			leGustaLaMarca = unaCerveza.marca()
+		} else {
+			leGustaLaMarca = null
+		}
+		return leGustaLaMarca
 	}
 }
 
 class Alemanes inherits Personas {
-	 override method leGustaMarca(unaCerveza) {
-		return true
+	override method marcaQueleGusta(unaCerveza) {
+	 	leGustaLaMarca = unaCerveza.marca()
+		return leGustaLaMarca
 	}
 	
-	override method quiereEntrarACarpa(unaCarpa) { return super(unaCarpa) and unaCarpa.limiteDeGente() % 2 == 0 }
+	override method quiereEntrarACarpa(unaCarpa) { return super(unaCarpa) and unaCarpa.limitePersonas() % 2 == 0 }
 }
+
